@@ -6,7 +6,6 @@ struct strNode{
 	Type key;
 	Type data;
 	struct strNode* next;
-	//struct strNode* prior;
 };
 
 typedef struct strNode * Node;
@@ -15,23 +14,17 @@ struct strList{
 	int size;
 	Node first;
 	Node last;
-//	Node preFirst;
-//	Node postLast;
-	void(*destructor)(void*);
+	void(*destructorK)(void*);
+	void(*destructorV)(void*);
 };
 
 
-List list_create(void (*destructor)(Type)){
+List list_create(void (*destructorK)(void*), void(*destructorV)(void*)){
 	List l = (List)malloc(sizeof(struct strList));
 	l->first = l->last = NULL;
 	l->size = 0;
-	l->destructor = destructor;
-	//l->preFirst = (Node)malloc(sizeof(struct strNode));
-	//l->preFirst->next = l->first;
-	//l->preFirst->prior = NULL;
-	//l->postLast = (Node)malloc(sizeof(struct strNode));
-	//l->postLast->prior = l->last;
-	//l->postLast->next = NULL;
+	l->destructorK = destructorK;
+	l->destructorV = destructorV;
 	return (l);
 }
 
@@ -43,8 +36,11 @@ void list_destroy(List l){
 	Node next;
 	while (current != NULL){
 		next = current->next;
-		if(l->destructor != NULL){
-			l->destructor(current->data);
+		if(l->destructorK != NULL){
+			l->destructorK(current->key);
+		}
+		if(l->destructorV != NULL){
+			l->destructorV(current->data);
 		}
 		free(current);
 		current = next;
@@ -56,7 +52,8 @@ int  list_size(List l){
 	return l->size;
 }
 
-void list_add(List l, Type d){
+void list_add(List l, Type k, Type v){
+	//printf("JAZ");
 	if(l == NULL){
 		return;
 	}
@@ -64,24 +61,32 @@ void list_add(List l, Type d){
 	if(n == NULL){
 		return;
 	}
-	n->data = d;
+	n->data = v;
+	n->key=k;
 	n->next = NULL;
 	if(l->size == 0){
 		l->first= l->last = n;
-		n->prior = NULL;
-	//	l->postLast->prior = n;
-	//	l->preFirst->next = n;
 	}
 	else if (l->size>0){
 		l->last->next = n;
-		n->prior = l->last;
 		l->last= n;
-	//	l->postLast->prior = n;
 	}
 	l->size++;
 }
 
-Type list_get(List l, int p){
+Type list_getkey(List l, int p){
+	if(l == NULL){
+		return NULL;
+	}
+	int i = 0;
+	Node current = l->first;
+	while(i != p){
+		current = current->next;
+		i++;
+	}
+	return current->key;
+}
+Type list_getdata(List l, int p){
 	if(l == NULL){
 		return NULL;
 	}
@@ -114,79 +119,45 @@ Type list_remove(List l, int p){
 	int i = 0;
 	Node current = l->first;
 	Type temp;
-	while(i != p){
+	while(i < p-1){
 		current = current->next;
 		i++;
-		//printf("%d\n", i);
 	}
-	temp = current->data;
-	//printf("%c\n", *(char*)temp);
-	if(current->prior == NULL && current->next == NULL){
+	
+	Node next = current->next;
+	
+	if(next==NULL)
+		temp=current->data;
+	else
+		temp = next->data;
+	
+	if(next==NULL){
+		
 		free(current);
+		l->first=NULL;
+	}
+	else if(next->next == NULL){
+		
+		free(next);
+		current->next = NULL;
 		l->first = NULL;
-		//l->preFirst->next =NULL;
-	}
-	else if(current->prior == NULL){
-		l->first = l->first->next;
-		current->next->prior = NULL;
-		free(current);
-	}
-	else if(current->next == NULL){
-		l->last = l->last->prior;
-		current->prior->next = NULL;
-		free(current);
 	}
 	else{
-		current->prior->next = current->next;
-		current->next->prior = current->prior;
-		free(current);
+		
+		current->next = next->next;
+		free(next);
 	}
 	l->size--;
-	//printf("%c %d", *(char*)temp, l->size);
 	return (temp);
 }
-/*
-Iterator list_begin(List l){
-	return l->preFirst;
-}
 
-Iterator list_end(List l){
-	return l->postLast;
-}*/
 
-bool list_hasNext(Iterator i){
-	if(i->next != NULL){
-		return True;
+void print(List l){
+	Node current = l->first;
+	while(current != NULL){
+		printf("%s ,%d\t", (char*)current->key, *(int*)current->data);
+		current = current->next;
 	}
-	return False;
-}
-
-bool list_hasPrior(Iterator i){
-	if(i->prior != NULL){
-		return True;
-	}
-	return False;
-}
-
-Iterator list_next(Iterator i){
-	if(list_hasNext(i)){
-		return i->next;
-	}
-	return NULL;
-}
-
-Iterator list_prior(Iterator i){
-	if(list_hasPrior(i)){
-		return i->prior;
-	}
-	return NULL;
-}
-
-Type list_data(Iterator i){
-	if(i != NULL){
-		return i->data;
-	}
-	return NULL;
 }
 
 
