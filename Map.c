@@ -50,17 +50,11 @@ void map_put(Map mp, Type k, Type v)
 	if(mp==NULL) return;
 	
 	int indice= mp->hF(k,mp->m);
-	//printf("%d\n", indice);
 	
 	if(mp->table[indice]==NULL)
 	{
-		//printf("JAZ2\n");
 		mp->table[indice]=list_create(NULL, NULL);
-	//	mp->table[indice]=(List)malloc(sizeof(structStrList));
 		list_add(mp->table[indice], k, v);
-		//printf("%s\n", (char*)list_getkey(mp->table[indice], 0));
-		//printf("%d\n", *(int*)list_getdata(mp->table[indice], 0));
-		//mp->table[indice]->key=k;
 	}
 	else
 	{
