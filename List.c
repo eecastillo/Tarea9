@@ -118,34 +118,29 @@ Type list_remove(List l, int p){
 	}
 	int i = 0;
 	Node current = l->first;
+	Node prior = l->first;
 	Type temp;
-	while(i < p-1){
+	while(i < p){
+		prior=current;
 		current = current->next;
 		i++;
 	}
-	
-	Node next = current->next;
-	
-	if(next==NULL)
-		temp=current->data;
-	else
-		temp = next->data;
-	
-	if(next==NULL){
-		
+	temp=current->data;
+	if(current==l->first){
+		if(current->next==NULL)
+			l->first=NULL;
+		else
+			l->first=current->next;
 		free(current);
-		l->first=NULL;
 	}
-	else if(next->next == NULL){
-		
-		free(next);
-		current->next = NULL;
-		l->first = NULL;
+	else if(current == l->last){
+		prior->next=NULL;
+		l->last=prior;
+		free(current);
 	}
 	else{
-		
-		current->next = next->next;
-		free(next);
+		prior->next=current->next;
+		free(current);
 	}
 	l->size--;
 	return (temp);

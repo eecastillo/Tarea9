@@ -67,10 +67,8 @@ int main(void)
 	
 	
 	printf("%d\n",*(int*)map_get(m, a1));
-	//printf("%d\n", hashfunc(a, 1000));
-	//printf("%d", Equals(a, b));
-	printf("Size: %d\n",map_size(m));
 	map_print(m, PrintStr, PrintVal);
+	printf("Size: %d\n",map_size(m));
 	
 	return 0;
 }

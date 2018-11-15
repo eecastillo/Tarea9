@@ -24,13 +24,7 @@ void list_set(List, Type, int p);
 Type list_remove(List, int p);
 void print(List);
 
-//Iterator list_begin(List);
-//Iterator list_end(List);
-//bool list_hasNext(Iterator);
-//bool list_hasPrior(Iterator);
-//Iterator list_next(Iterator);
-//Iterator list_prior(Iterator);
-//Type list_data(Iterator);
+
 
 
 

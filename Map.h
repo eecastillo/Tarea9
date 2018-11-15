@@ -4,9 +4,8 @@
 
 #include "List.h"
 
-//typedef void * Type;
+
 typedef struct strMap* Map;
-//typedef enum {False1, True1}bool;
 
 typedef int (*HashFunc) (Type, int);
 typedef bool(*EqualsFunc) (Type, Type);
