@@ -11,11 +11,13 @@ typedef struct strMap* Map;
 typedef int (*HashFunc) (Type, int);
 typedef bool(*EqualsFunc) (Type, Type);
 typedef void (*DestroyFunc) (Type);
+typedef void (*PrintFunc) (Type);
 
 
 
 
 Map map_create(int m, HashFunc hF, EqualsFunc eF, DestroyFunc aDestructor,DestroyFunc bDestructor);
+void map_print(Map m, PrintFunc keyPrinter, PrintFunc valuePrinter);
 void map_destroy(Map);
 int  map_size(Map);
 void map_put(Map mp, Type k, Type v);

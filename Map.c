@@ -138,12 +138,15 @@ Type map_remove(Map mp, Type k)
 	
 }
 
-void printm (Map mp){
-	for(int i = 0; i<mp->m; i++){
+void map_print(Map m, PrintFunc keyPrinter, PrintFunc valuePrinter){
+	for(int i = 0; i<m->m; i++){
 		printf("%d: ", i);
-		if(mp->table[i] != NULL){
-			print(mp->table[i]);
-		}	
+		if(m->table[i] != NULL){
+			for(int j = 0; j<list_size(m->table[i]); j++){
+				keyPrinter(list_getkey(m->table[i], j));
+				valuePrinter(list_getdata(m->table[i], j));
+			}
+		}
 		printf("\n");
 	}
 }

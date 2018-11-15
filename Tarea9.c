@@ -26,6 +26,14 @@ bool Equals (Type value1, Type value2)
 	else return False;
 }
 
+void PrintStr(Type string){
+	printf("<%s, ", (char*)string);
+}
+
+void PrintVal(Type value){
+	printf("%d>\t", *(int*)value);
+}
+
 int main(void)
 {
 	
@@ -50,19 +58,19 @@ int main(void)
 	map_put(m, a5, &n5);
 	map_put(m, a1, &n4);
 	
-	printm(m);
+	map_print(m, PrintStr, PrintVal);
 	printf("\n\n");
 	
 	printf("%d\n", *(int*)map_remove(m, a3));
-	printm(m);
+	map_print(m, PrintStr, PrintVal);
 	printf("%d\n\n", *(int*)map_remove(m, a4));
 	
-	printm(m);
 	
 	printf("%d\n",*(int*)map_get(m, a1));
 	//printf("%d\n", hashfunc(a, 1000));
 	//printf("%d", Equals(a, b));
-	printf("%d\n",map_size(m));
+	printf("Size: %d\n",map_size(m));
+	map_print(m, PrintStr, PrintVal);
 	
 	return 0;
 }
